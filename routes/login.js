@@ -62,7 +62,7 @@ const GOOGLE_CLIENT_ID = require('../config/config').GOOGLE_CLIENT_ID;
 const GOOGLE_SECRET = require('../config/config').GOOGLE_SECRET;
 app.post('/google', (req, res) => {
   var token = req.body.token || 'asasas';
-  console.log('token', token);
+  // console.log('token', token);
   var client = new GoogleAuth.OAuth2Client(
     GOOGLE_CLIENT_ID,
     GOOGLE_SECRET,
