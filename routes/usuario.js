@@ -71,78 +71,89 @@ app.post('/', (req, res) => {
 // =====================================================
 // actualizar un nuevo usuario
 //======================================================
-app.put('/:id', mdAutentificacion.verificaToken, (req, res) => {
-	var id = req.params.id;
-	var body = req.body;
+app.put(
+	'/:id',
+	[
+		mdAutentificacion.verificaToken,
+		mdAutentificacion.verificaAdmin_o_MismoUsuario
+	],
+	(req, res) => {
+		var id = req.params.id;
+		var body = req.body;
 
-	Usuario.findById(id, (err, usuarioDb) => {
-		if (err) {
-			return res.status(500).json({
-				ok: false,
-				mensaje: 'Error al buscar usuario',
-				errors: err
-			});
-		}
-
-		if (!usuarioDb) {
-			return res.status(400).json({
-				ok: false,
-				mensaje: 'el usuario con el id: ' + id + ' no existe',
-				errors: { message: 'No existe un usuario con ese ID.' }
-			});
-		}
-
-		usuarioDb.nombre = body.nombre;
-		usuarioDb.email = body.email;
-		usuarioDb.role = body.role;
-
-		usuarioDb.save((err, usuarioGuardado) => {
+		Usuario.findById(id, (err, usuarioDb) => {
 			if (err) {
-				return res.status(400).json({
+				return res.status(500).json({
 					ok: false,
-					mensaje: 'Error al actualizar usuarios',
+					mensaje: 'Error al buscar usuario',
 					errors: err
 				});
 			}
 
-			usuarioGuardado.password = ':)';
-			res.status(200).json({
-				ok: true,
-				usuario: usuarioGuardado
+			if (!usuarioDb) {
+				return res.status(400).json({
+					ok: false,
+					mensaje: 'el usuario con el id: ' + id + ' no existe',
+					errors: { message: 'No existe un usuario con ese ID.' }
+				});
+			}
+
+			usuarioDb.nombre = body.nombre;
+			usuarioDb.email = body.email;
+			usuarioDb.role = body.role;
+
+			usuarioDb.save((err, usuarioGuardado) => {
+				if (err) {
+					return res.status(400).json({
+						ok: false,
+						mensaje: 'Error al actualizar usuarios',
+						errors: err
+					});
+				}
+
+				usuarioGuardado.password = ':)';
+				res.status(200).json({
+					ok: true,
+					usuario: usuarioGuardado
+				});
 			});
 		});
-	});
-});
+	}
+);
 
 // =====================================================
 // eliminar un nuevo usuario x id
 //======================================================
-app.delete('/:id', mdAutentificacion.verificaToken, (req, res) => {
-	var id = req.params.id;
-	var body = req.body;
+app.delete(
+	'/:id',
+	[mdAutentificacion.verificaToken, mdAutentificacion.verificaAdminRole],
+	(req, res) => {
+		var id = req.params.id;
+		var body = req.body;
 
-	Usuario.findByIdAndRemove(id, (err, usuarioBorrado) => {
-		if (err) {
-			return res.status(500).json({
-				ok: false,
-				mensaje: 'Error al buscar usuario',
-				errors: err
+		Usuario.findByIdAndRemove(id, (err, usuarioBorrado) => {
+			if (err) {
+				return res.status(500).json({
+					ok: false,
+					mensaje: 'Error al buscar usuario',
+					errors: err
+				});
+			}
+
+			if (!usuarioBorrado) {
+				return res.status(400).json({
+					ok: false,
+					mensaje: 'No existe un usuario con ese ID.',
+					errors: { message: 'No existe un usuario con ese ID.' }
+				});
+			}
+
+			res.status(200).json({
+				ok: true,
+				usuario: usuarioBorrado
 			});
-		}
-
-		if (!usuarioBorrado) {
-			return res.status(400).json({
-				ok: false,
-				mensaje: 'No existe un usuario con ese ID.',
-				errors: { message: 'No existe un usuario con ese ID.' }
-			});
-		}
-
-		res.status(200).json({
-			ok: true,
-			usuario: usuarioBorrado
 		});
-	});
-});
+	}
+);
 
 module.exports = app;
