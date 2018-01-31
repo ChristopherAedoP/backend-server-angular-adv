@@ -8,6 +8,27 @@ var app = express();
 
 var Usuario = require('../models/usuario');
 
+var mdAutenticacion = require('../middlewares/autentificacion');
+// =====================================================
+// renovar token
+//======================================================
+app.get('/renuevatoken', mdAutenticacion.verificaToken, (req, res) => {
+	var token = jwt.sign(
+		{
+			usuario: req.usuario
+		},
+		seed,
+		{
+			expiresIn: 14400
+		}
+	);
+
+	return res.status(200).json({
+		ok: true,
+		token: token
+	});
+});
+
 // =====================================================
 // Autentificacion Normal
 //======================================================
