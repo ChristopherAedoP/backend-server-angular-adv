@@ -33,7 +33,7 @@ var imagenesRoutes = require('./routes/imagenes');
 
 //conexion a base a datos
 mongoose.connection.openUri(
-    process.env.MONGODB || 'mongodb://localhost:27017/hospitalDB',
+    process.env.MONGODB_URI || 'mongodb://localhost:27017/hospitalDB',
     (err, res) => {
         if (err) throw err;
 
