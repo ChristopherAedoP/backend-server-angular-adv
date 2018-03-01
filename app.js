@@ -32,14 +32,26 @@ var uploadRoutes = require('./routes/upload');
 var imagenesRoutes = require('./routes/imagenes');
 
 //conexion a base a datos
-mongoose.connection.openUri(
-    process.env.MONGODB_URI || 'mongodb://localhost:27017/hospitalDB',
-    (err, res) => {
-        if (err) throw err;
+const config = require('./config')
+    // mongoose.connection.openUri(
+    //     process.env.MONGODB_URI || 'mongodb://localhost:27017/hospitalDB',
+    //     (err, res) => {
+    //         if (err) throw err;
 
-        console.log('base de datos:  \x1b[32m%s\x1b[0m', 'Online');
+//         console.log('base de datos:  \x1b[32m%s\x1b[0m', 'Online');
+//     }
+// );
+
+mongoose.connect(config.db, (err, res) => {
+    if (err) {
+        return console.log(`Error al conectar a la base de datos: ${err}`)
     }
-);
+    console.log('Conexión a la base de datos establecida...')
+
+    // app.listen(config.port, () => {
+    //     console.log(`API REST corriendo en http://localhost:${config.port}`)
+    // })
+})
 
 // Server index config
 // ** carpetas publicas
