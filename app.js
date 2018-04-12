@@ -46,7 +46,7 @@ mongoose.connect(config.db, (err, res) => {
     if (err) {
         return console.log(`Error al conectar a la base de datos: ${err}`)
     }
-    console.log('Conexión a la base de datos establecida...')
+    console.log('Conexión a la base de datos establecida, OK!')
 
     // app.listen(config.port, () => {
     //     console.log(`API REST corriendo en http://localhost:${config.port}`)
@@ -74,6 +74,6 @@ var server_port = process.env.YOUR_PORT || process.env.PORT || 3000;
 app.listen(server_port, () => {
     console.log(
         'Express server corriendo en el puerto:' + server_port,
-        'Online'
+        'Online!'
     );
 });
